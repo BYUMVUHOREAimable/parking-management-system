@@ -1,15 +1,16 @@
 import cv2
 from ultralytics import YOLO
-import pytesseract
 import os
 import time
 import serial
 import serial.tools.list_ports
 import csv
 from collections import Counter
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # Load YOLOv8 model
-model = YOLO('/opt/homebrew/runs/detect/train4/weights/best.pt')
+model = YOLO('best.pt')
 
 # Plate save directory
 save_dir = 'plates'
@@ -26,7 +27,8 @@ if not os.path.exists(csv_file):
 def detect_arduino_port():
     ports = list(serial.tools.list_ports.comports())
     for port in ports:
-        if "usbmodem" in port.device or "wchusbmodem" in port.device:
+        # Change usbmodem and wchusbmodem to match your device for windows users is "com"
+        if "COM" in port.device or "COM" in port.device:
             return port.device
     return None
 
